@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Hexo</title>
+  <title>docker storage | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="docker存储方式比较预热 写时复制(CoW),所有的容器共享image的文件系统，所有数据都从image中读取，只有当要对文件进行写操作时，才从image里把要写的文件复制到自己的文件系统进行修改  每个容器修改的都是自己的复本，相互隔离，相互不影响。使用CoW可以有效的提高磁盘的利用率。  写时分配(allocate-on-demand）   只有在要新写入一个文件时才分配空间，这样可以提高">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo">
+<meta property="og:title" content="docker storage">
 <meta property="og:url" content="http://yoursite.com/2017/05/16/docker-storage/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="docker存储方式比较预热 写时复制(CoW),所有的容器共享image的文件系统，所有数据都从image中读取，只有当要对文件进行写操作时，才从image里把要写的文件复制到自己的文件系统进行修改  每个容器修改的都是自己的复本，相互隔离，相互不影响。使用CoW可以有效的提高磁盘的利用率。  写时分配(allocate-on-demand）   只有在要新写入一个文件时才分配空间，这样可以提高">
 <meta property="og:image" content="http://w4.sanwen8.cn/mmbiz/g42Pp5Zyy05VLt2G7dfribUJU1U7SHlnXqdrpuGMDCwczzJ9UbxPEbicwnVcqBnjcia8iaJNls6ZGyDmnrAv7JNVSg/640?wx_fmt=png">
-<meta property="og:updated_time" content="2017-05-16T03:52:44.000Z">
+<meta property="og:updated_time" content="2017-05-16T03:54:25.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="docker storage">
 <meta name="twitter:description" content="docker存储方式比较预热 写时复制(CoW),所有的容器共享image的文件系统，所有数据都从image中读取，只有当要对文件进行写操作时，才从image里把要写的文件复制到自己的文件系统进行修改  每个容器修改的都是自己的复本，相互隔离，相互不影响。使用CoW可以有效的提高磁盘的利用率。  写时分配(allocate-on-demand）   只有在要新写入一个文件时才分配空间，这样可以提高">
 <meta name="twitter:image" content="http://w4.sanwen8.cn/mmbiz/g42Pp5Zyy05VLt2G7dfribUJU1U7SHlnXqdrpuGMDCwczzJ9UbxPEbicwnVcqBnjcia8iaJNls6ZGyDmnrAv7JNVSg/640?wx_fmt=png">
   
@@ -75,6 +75,16 @@
   <div class="article-inner">
     
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      docker storage
+    </h1>
+  
+
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="docker存储方式比较"><a href="#docker存储方式比较" class="headerlink" title="docker存储方式比较"></a>docker存储方式比较</h1><h2 id="预热"><a href="#预热" class="headerlink" title="预热"></a>预热</h2><ul>
@@ -125,7 +135,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/05/16/docker-storage/" data-id="cj2r0whcl00002rk1oifaaibs" class="article-share-link">Delen</a>
+      <a data-url="http://yoursite.com/2017/05/16/docker-storage/" data-id="cj2r0yc6400008hk1asmuqeti" class="article-share-link">Delen</a>
       
       
     </footer>
@@ -174,7 +184,7 @@
       <ul>
         
           <li>
-            <a href="/2017/05/16/docker-storage/">(no title)</a>
+            <a href="/2017/05/16/docker-storage/">docker storage</a>
           </li>
         
           <li>
