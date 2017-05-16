@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="docker存储方式比较预热 写时复制(CoW),所有的容器共享image的文件系统，所有数据都从image中读取，只有当要对文件进行写操作时，才从image里把要写的文件复制到自己的文件系统进行修改  每个容器修改的都是自己的复本，相互隔离，相互不影响。使用CoW可以有效的提高磁盘的利用率。  写时分配(allocate-on-demand）   只有在要新写入一个文件时才分配空间，这样可以提高">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://yoursite.com/2017/05/16/docker-storage/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="docker存储方式比较预热 写时复制(CoW),所有的容器共享image的文件系统，所有数据都从image中读取，只有当要对文件进行写操作时，才从image里把要写的文件复制到自己的文件系统进行修改  每个容器修改的都是自己的复本，相互隔离，相互不影响。使用CoW可以有效的提高磁盘的利用率。  写时分配(allocate-on-demand）   只有在要新写入一个文件时才分配空间，这样可以提高">
+<meta property="og:image" content="http://w4.sanwen8.cn/mmbiz/g42Pp5Zyy05VLt2G7dfribUJU1U7SHlnXqdrpuGMDCwczzJ9UbxPEbicwnVcqBnjcia8iaJNls6ZGyDmnrAv7JNVSg/640?wx_fmt=png">
+<meta property="og:updated_time" content="2017-05-16T03:52:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo">
+<meta name="twitter:description" content="docker存储方式比较预热 写时复制(CoW),所有的容器共享image的文件系统，所有数据都从image中读取，只有当要对文件进行写操作时，才从image里把要写的文件复制到自己的文件系统进行修改  每个容器修改的都是自己的复本，相互隔离，相互不影响。使用CoW可以有效的提高磁盘的利用率。  写时分配(allocate-on-demand）   只有在要新写入一个文件时才分配空间，这样可以提高">
+<meta name="twitter:image" content="http://w4.sanwen8.cn/mmbiz/g42Pp5Zyy05VLt2G7dfribUJU1U7SHlnXqdrpuGMDCwczzJ9UbxPEbicwnVcqBnjcia8iaJNls6ZGyDmnrAv7JNVSg/640?wx_fmt=png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Zoeken"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-docker-storage" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/16/docker-storage/" class="article-date">
+  <time datetime="2017-05-16T03:52:44.000Z" itemprop="datePublished">2017-05-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="docker存储方式比较"><a href="#docker存储方式比较" class="headerlink" title="docker存储方式比较"></a>docker存储方式比较</h1><h2 id="预热"><a href="#预热" class="headerlink" title="预热"></a>预热</h2><ul>
+<li><p>写时复制(CoW),所有的容器共享image的文件系统，所有数据都从image中读取，只有当要对文件进行写操作时，才从image里把要写的文件复制到自己的文件系统进行修改  每个容器修改的都是自己的复本，相互隔离，相互不影响。使用CoW可以有效的提高磁盘的利用率。</p>
+</li>
+<li><p>写时分配(allocate-on-demand）   只有在要新写入一个文件时才分配空间，这样可以提高存储资源的利用率</p>
+</li>
+</ul>
+<h2 id="aufs"><a href="#aufs" class="headerlink" title="aufs"></a>aufs</h2><p>支持将不同目录挂载到同一个虚拟文件系统下的文件系统。这种文件系统可以一层一层地叠加修改文件。无论底下有多少层都是只读的，只有最上层的文件系统是可写的<br>   文件级存储</p>
+<p>##btrfs<br>下一代写时复制文件系统，并入Linux内核，也是文件级级存储。把文件系统的一部分配置为一个完整的子文件系统，一个大的文件系统可以被划分为多个子文件系统，这些子文件系统共享底层的设备空间，在需要磁盘空间时便从底层设备中分配，Btrfs 将磁盘空间划分为多个chunk 。每个chunk 可以使用不同的磁盘空间分配策略。比如某些 chunk 只存放 metadata，某些 chunk 只存放数据，</p>
+<h2 id="device-mapper"><a href="#device-mapper" class="headerlink" title="device mapper"></a>device mapper</h2><ul>
+<li>loop lvm  扩大data大小   sudo truncate -s 214748364800 /var/lib/docker/devicemapper/devicemapper/data  <a href="https://docs.docker.com/engine/userguide/storagedriver/device-mapper-driver/" target="_blank" rel="external">docker loop-lvm 默认100G不够 解决方案</a>（试验成功）</li>
+<li><p>简单解决方案:增加文件大小再重启docker  dd if=/dev/zero of=/var/lib/docker/devicemapper/devicemapper/data bs=1G count=0 seek=600 （也可行，不是官方建议）<br>逻辑设备到物理设备的映射框架机制     块级存储</p>
+</li>
+<li><p>除了前面说到的问题外，devicemapper + loop-lvm 还有一个缺陷，因为它是稀疏文件，所以它会不断增长。用户在使用过程中会注意到 /var/lib/docker/devicemapper/devicemapper/data 不断增长，而且无法控制。很多人会希望删除镜像或者可以解决这个问题，结果发现效果并不明显。原因就是这个稀疏文件的空间释放后基本不进行垃圾回收的问题。因此往往会出现即使删除了文件内容，空间却无法回收，随着使用这个稀疏文件一直在不断增长。</p>
+</li>
+<li><p>解决方案</p>
+<ul>
+<li><a href="http://www.tuicool.com/articles/IvAvyu" target="_blank" rel="external">http://www.tuicool.com/articles/IvAvyu</a></li>
+<li><a href="http://www.projectatomic.io/blog/2016/03/daemon_option_basedevicesize/" target="_blank" rel="external">http://www.projectatomic.io/blog/2016/03/daemon_option_basedevicesize/</a></li>
+<li><a href="http://jpetazzo.github.io/2014/01/29/docker-device-mapper-resize/" target="_blank" rel="external">http://jpetazzo.github.io/2014/01/29/docker-device-mapper-resize/</a></li>
+</ul>
+</li>
+</ul>
+<p>pvcreate /dev/xvdf<br>vgcreate docker /dev/xvdf<br> lvcreate –wipesignatures y -n thinpool docker -l 95%VG<br> lvcreate –wipesignatures y -n thinpoolmeta docker -l 1%VG<br>lvconvert -y –zero n -c 512K –thinpool docker/thinpool –poolmetadata docker/thinpoolmeta</p>
+<p>vi /etc/lvm/profile/docker-thinpool.profile,内容为activation {<br>    thin_pool_autoextend_threshold=80<br>    thin_pool_autoextend_percent=20<br>}<br>lvchange –metadataprofile docker-thinpool docker/thinpool<br>lvs -o+seg_monitor<br>–storage-driver=devicemapper –storage-opt=dm.thinpooldev=/dev/mapper/docker-thinpool –storage-opt=dm.use_deferred_removal=true –storage-opt=dm.use_deferred_deletion=true</p>
+<h2 id="overlayfs"><a href="#overlayfs" class="headerlink" title="overlayfs"></a>overlayfs</h2><p>  一个 upper 文件系统和一个 lower 文件系统，分别代表Docker的镜像层和容器层<br>     文件级存储</p>
+<h2 id="zfs"><a href="#zfs" class="headerlink" title="zfs"></a>zfs</h2><p>把所有设备集中到一个存储池中来进行管理，用“存储池”的概念来管理物理存储空间</p>
+<h2 id="各种对比"><a href="#各种对比" class="headerlink" title="各种对比"></a>各种对比</h2><p><img src="http://w4.sanwen8.cn/mmbiz/g42Pp5Zyy05VLt2G7dfribUJU1U7SHlnXqdrpuGMDCwczzJ9UbxPEbicwnVcqBnjcia8iaJNls6ZGyDmnrAv7JNVSg/640?wx_fmt=png" alt="tupian"></p>
+<h1 id="关于容器持久化存储的3个方案"><a href="#关于容器持久化存储的3个方案" class="headerlink" title="关于容器持久化存储的3个方案"></a>关于容器持久化存储的3个方案</h1><ol>
+<li>持久化数据并不是存储在容器中，而是作为后端服务，例如对象存储和数据库即服务。这个方案可以确保容器和它们的数据持久化支持服务松耦合，同时也不需要那些会限制扩展的依赖</li>
+<li>挂载共享网络存储卷到容器中作为数据存储使用</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://sanwen8.cn/p/2114I8Z.html" target="_blank" rel="external">存储对比</a></p>
+<p><a href="http://www.open-open.com/lib/view/open1476173250691.html" target="_blank" rel="external">存储对比2</a></p>
+<h1 id="devicemapper-direct-lvm-store"><a href="#devicemapper-direct-lvm-store" class="headerlink" title="devicemapper direct-lvm store"></a>devicemapper direct-lvm store</h1><p><a href="http://coolshell.cn/articles/17200.html" target="_blank" rel="external">docker loop-lvm原理解析</a></p>
+<p><a href="http://blog.csdn.net/qq_26923057/article/details/52351731" target="_blank" rel="external">docker direct-lvm存储</a></p>
+<h1 id="loop-lvm-amp-direct-lvm"><a href="#loop-lvm-amp-direct-lvm" class="headerlink" title="loop-lvm &amp; direct-lvm"></a>loop-lvm &amp; direct-lvm</h1><p>1.loop-lvm不适合io重的</p>
+<ol>
+<li>direct-lvm The performance advantages are measurable at moderate load and high density.</li>
+</ol>
+<h2 id="容器磁盘大小及扩容"><a href="#容器磁盘大小及扩容" class="headerlink" title="容器磁盘大小及扩容"></a>容器磁盘大小及扩容</h2><ul>
+<li>df -hT 可以查看容器内根目录挂在磁盘的总大小及已使用大小</li>
+<li>动态扩容<br><pre><code><br>#!/bin/bash<br>#This script is dynamic modify docker container disk<br>#Author Deng Lei<br>if [ -z $1 ] || [ -z $2 ]; then<br>  echo “Usage: container_name increase_capacity”<br>  echo “Example: I want increase 11G to test”<br>  echo “The command is:  sh <code>basename $0</code> test 11”<br>  exit 1 <pre><code>fi
+</code></pre>if [ <code>docker inspect $1 &amp;&gt;&gt;/dev/null &amp;&amp;  echo 0 || echo 1</code> -eq 1 ];then<br>  echo “The container $1 is no exist!”<br>  exit 1<br>fi<br>container_id=<code>docker inspect -f &#39;{{ .Id }}&#39; $1</code><br>now_disk=<code>dmsetup table /dev/mapper/docker-*-$container_id|awk &#39;{print $2}&#39;</code><br>disk=$(($2<em>1024</em>1024<em>1024/512))<br>if [ $disk -lt $now_disk ];then<br>  echo “I can’t shink container $1 from $(($now_disk</em>512/1024/1024/1024))G to ${2}G!I only modify contanier increase disk!”<br>  exit 1<br>fi<br>dmsetup table /dev/mapper/docker-<em>-$container_id|sed “s/0 [0-9]</em> thin/0 $disk thin/“|dmsetup load /dev/mapper/docker-<em>-$container_id<br>dmsetup resume /dev/mapper/docker-</em>-$container_id<br>resize2fs /dev/mapper/docker-*-$container_id<br>if [ $? -eq 0 ];then<br>  echo “dynamic container $1 disk to ${2}G is success!”<br>else<br>  echo “dynamic container $1 disk to ${2}G is fail!”<br>fi<br></code></pre></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/05/16/docker-storage/" data-id="cj2r0whcl00002rk1oifaaibs" class="article-share-link">Delen</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2017/05/15/git/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Ouder</strong>
+      <div class="article-nav-title">git use</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archieven</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recente berichten</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/05/16/docker-storage/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/15/git/">git use</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/15/personBlog/">搭建个人博客</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/15/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
