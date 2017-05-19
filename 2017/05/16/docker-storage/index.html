@@ -12,7 +12,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="docker存储方式比较预热 写时复制(CoW),所有的容器共享image的文件系统，所有数据都从image中读取，只有当要对文件进行写操作时，才从image里把要写的文件复制到自己的文件系统进行修改  每个容器修改的都是自己的复本，相互隔离，相互不影响。使用CoW可以有效的提高磁盘的利用率。  写时分配(allocate-on-demand）   只有在要新写入一个文件时才分配空间，这样可以提高">
 <meta property="og:image" content="http://w4.sanwen8.cn/mmbiz/g42Pp5Zyy05VLt2G7dfribUJU1U7SHlnXqdrpuGMDCwczzJ9UbxPEbicwnVcqBnjcia8iaJNls6ZGyDmnrAv7JNVSg/640?wx_fmt=png">
-<meta property="og:updated_time" content="2017-05-16T03:54:25.000Z">
+<meta property="og:updated_time" content="2017-05-19T07:02:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="docker storage">
 <meta name="twitter:description" content="docker存储方式比较预热 写时复制(CoW),所有的容器共享image的文件系统，所有数据都从image中读取，只有当要对文件进行写操作时，才从image里把要写的文件复制到自己的文件系统进行修改  每个容器修改的都是自己的复本，相互隔离，相互不影响。使用CoW可以有效的提高磁盘的利用率。  写时分配(allocate-on-demand）   只有在要新写入一个文件时才分配空间，这样可以提高">
@@ -109,8 +109,7 @@
 </ul>
 </li>
 </ul>
-<p>pvcreate /dev/xvdf<br>vgcreate docker /dev/xvdf<br> lvcreate –wipesignatures y -n thinpool docker -l 95%VG<br> lvcreate –wipesignatures y -n thinpoolmeta docker -l 1%VG<br>lvconvert -y –zero n -c 512K –thinpool docker/thinpool –poolmetadata docker/thinpoolmeta</p>
-<p>vi /etc/lvm/profile/docker-thinpool.profile,内容为activation {<br>    thin_pool_autoextend_threshold=80<br>    thin_pool_autoextend_percent=20<br>}<br>lvchange –metadataprofile docker-thinpool docker/thinpool<br>lvs -o+seg_monitor<br>–storage-driver=devicemapper –storage-opt=dm.thinpooldev=/dev/mapper/docker-thinpool –storage-opt=dm.use_deferred_removal=true –storage-opt=dm.use_deferred_deletion=true</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">pvcreate /dev/xvdf</div><div class="line">vgcreate docker /dev/xvdf</div><div class="line"> lvcreate --wipesignatures y -n thinpool docker -l 95%VG</div><div class="line"> lvcreate --wipesignatures y -n thinpoolmeta docker -l 1%VG </div><div class="line">lvconvert -y --zero n -c 512K --thinpool docker/thinpool --poolmetadata docker/thinpoolmeta</div><div class="line"></div><div class="line">vi /etc/lvm/profile/docker-thinpool.profile,内容为activation &#123;</div><div class="line">    thin_pool_autoextend_threshold=80</div><div class="line">    thin_pool_autoextend_percent=20</div><div class="line">&#125;</div><div class="line">lvchange --metadataprofile docker-thinpool docker/thinpool</div><div class="line">lvs -o+seg_monitor</div><div class="line">--storage-driver=devicemapper --storage-opt=dm.thinpooldev=/dev/mapper/docker-thinpool --storage-opt=dm.use_deferred_removal=true --storage-opt=dm.use_deferred_deletion=true</div></pre></td></tr></table></figure>
 <h2 id="overlayfs"><a href="#overlayfs" class="headerlink" title="overlayfs"></a>overlayfs</h2><p>  一个 upper 文件系统和一个 lower 文件系统，分别代表Docker的镜像层和容器层<br>     文件级存储</p>
 <h2 id="zfs"><a href="#zfs" class="headerlink" title="zfs"></a>zfs</h2><p>把所有设备集中到一个存储池中来进行管理，用“存储池”的概念来管理物理存储空间</p>
 <h2 id="各种对比"><a href="#各种对比" class="headerlink" title="各种对比"></a>各种对比</h2><p><img src="http://w4.sanwen8.cn/mmbiz/g42Pp5Zyy05VLt2G7dfribUJU1U7SHlnXqdrpuGMDCwczzJ9UbxPEbicwnVcqBnjcia8iaJNls6ZGyDmnrAv7JNVSg/640?wx_fmt=png" alt="tupian"></p>
@@ -135,7 +134,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/05/16/docker-storage/" data-id="cj2r0yc6400008hk1asmuqeti" class="article-share-link">Delen</a>
+      <a data-url="http://yoursite.com/2017/05/16/docker-storage/" data-id="cj2vhzjvz00003dk1bil2soym" class="article-share-link">Delen</a>
       
       
     </footer>
