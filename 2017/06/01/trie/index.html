@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/06/01/trie/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="简介 又名字典树或者前缀树,特点是利用字符串的公共前缀来节约存储空间  性质 根节点不包含字符，除根节点外每一个节点都只包含一个字符 从根节点到某一节点，路径上经过的字符连接起来，为该节点对应的字符串 每个节点的所有子节点包含的字符都不相同。  应用场景 web服务的请求路由模块  mux   搜索引擎的分词模块  IKAnalyzer  搜索推荐：待续  分析mux 主要数据结构 type No">
-<meta property="og:updated_time" content="2017-06-01T11:32:29.000Z">
+<meta property="og:updated_time" content="2017-06-01T16:32:49.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Trie树应用详解">
 <meta name="twitter:description" content="简介 又名字典树或者前缀树,特点是利用字符串的公共前缀来节约存储空间  性质 根节点不包含字符，除根节点外每一个节点都只包含一个字符 从根节点到某一节点，路径上经过的字符连接起来，为该节点对应的字符串 每个节点的所有子节点包含的字符都不相同。  应用场景 web服务的请求路由模块  mux   搜索引擎的分词模块  IKAnalyzer  搜索推荐：待续  分析mux 主要数据结构 type No">
@@ -52,9 +52,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
@@ -99,14 +99,22 @@
 <li>搜索推荐：待续</li>
 </ul>
 <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><h3 id="mux"><a href="#mux" class="headerlink" title="mux"></a>mux</h3><ul>
-<li>主要数据结构 <pre><code>type Node struct {<br>  name, allow                  []string  //allow储存的是HTTP Method(Get,Post,Head等等)。name存储的是restful  Uri路径中的正则表达式，在Match时从中获取正则式对应的值<br>  pattern, segment             string //segment:值为strings.Split(Uri, “/“)中的元素。pattern值：当前node的endpoint为True值，值为整个Uri<br>  endpoint, wildcard, optional bool //endpoint:当前node的pattern是完整的Uri时，值为True；wildcard：当strings.Split(Uri, “/“)中的元素值为 <em> 或</em>.<em>时为True，<br>  parent                       </em>Node<br>  segChildren                  []<em>Node<br>  optionChildren               []</em>Node<br>  varyChildren                 []<em>Node<br>  children                     map[string]</em>Node<br>  handlers                     map[string]interface{}<br>  regex                        <em>regexp.Regexp<br>  namedRoutes                  map[string]</em>Node<br>}</code></pre></li>
-<li>fgg</li>
+<li>主要数据结构 <pre><code>type Node struct {<br>  name, allow                  []string  //allow储存的是HTTP Method(Get,Post,Head等等)。name存储的是restful  Uri路径中的正则表达式，在Match时从中获取正则式对应的值<br>  pattern, segment             string //segment:值为strings.Split(Uri, “/“)中的元素。pattern值：当前node的endpoint为True值，值为整个Uri<br>  endpoint, wildcard, optional bool //endpoint:当前node的pattern是完整的Uri时，值为True；wildcard：当strings.Split(Uri, “/“)中的元素值为 <em> 或</em>.<em>时为True，<br>  parent                       </em>Node  //父节点<br>  segChildren                  []<em>Node //此节点存储Uri中包含segment的子节点<br>  optionChildren               []</em>Node  //此节点存储Uri中包含?的子节点<br>  varyChildren                 []<em>Node //此节点存储Uri中包含</em>或?:的子节点<br>  children                     map[string]<em>Node  //此节点存储Uri中不包含正则的子节点<br>  handlers              // 储存此节点Http Method所对应的驱动事件       map[string]interface{}<br>  regex                        </em>regexp.Regexp  //Uri中包含<em>或者复杂正则(article<em>:id:int),则所对应的值为article</em>([\w]+)<br>  namedRoutes                  map[string]</em>Node  //暂时未使用<br>}<br></code></pre></li>
+<li><p>插入过程:</p>
+<ul>
+<li>先把整个Uri按/分割成数组，选择第一个segment元素，查找所对应的节点A，有就返回，没有就创建，再选择余下的元素和节点A，递归调用，直至余下数组个数为0 </li>
+<li>根据当前segment查找对应的节点逻辑如下:先看parent的children哈希中是否存在，有就返回，没有就创建，再根据当前segment正则特征关联上parent节点，代码如下<pre><code><br>if segment == “” {<br>  parent.children[segment] = node<br>} else if strings.Contains(segment, “::”) {<br>  parent.children[strings.Replace(segment, “::”, “:”, -1)] = node<br>} else if segment == “<em>“ {<br>  node.wildcard = true<br>  node.regex = wildRegexp<br>  node.name = []string{“:splat”}<br>  parent.varyChildren = append(parent.varyChildren, node)<br>} else if segment == “</em>.*” {<br>  node.wildcard = true<br>  node.regex = extWildRegexp<br>  node.name = []string{“:path”, “:ext”}<br>  parent.varyChildren = append(parent.varyChildren, node)<br>} else if optionalParamRegexp.MatchString(segment) {<br>  node.optional = true<br>  node.name = []string{segment[1:]}<br>  parent.optionChildren = append(parent.optionChildren, node)<br>  parent.segChildren = append(parent.segChildren, node)<br>} else if paramRegexp.MatchString(segment) {<br>  node.name = []string{segment}<br>  parent.segChildren = append(parent.segChildren, node)<br>} else if strings.ContainsAny(segment, “:”) {<br>  node.name, node.regex, node.optional = regexpSegment(segment)<br>  if node.optional {<pre><code>parent.optionChildren = append(parent.optionChildren, node)
+</code></pre>  }<br>  parent.varyChildren = append(parent.varyChildren, node)<br>} else {<br>  parent.children[segment] = node<br>}</code></pre> </li>
+</ul>
+</li>
+<li><p>match过程:    </p>
+</li>
 </ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/06/01/trie/" data-id="cj3ecd11e0004kok1rrlniryo" class="article-share-link">Partager</a>
+      <a data-url="http://yoursite.com/2017/06/01/trie/" data-id="cj3en39rt0004flk1g6jpif7f" class="article-share-link">Share</a>
       
       
     </footer>
@@ -117,7 +125,7 @@
   
   
     <a href="/2017/05/22/marathon/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Ancien</strong>
+      <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">marathon部署系统</div>
     </a>
   
@@ -150,7 +158,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Articles récents</h3>
+    <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
         
@@ -187,7 +195,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2017 John Doe<br>
-      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
