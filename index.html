@@ -92,15 +92,19 @@
 <li>每个节点的所有子节点包含的字符都不相同。</li>
 </ul>
 <h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><ul>
-<li>web服务的请求路由模块  <a href="https://github.com/testzlx/mux" target="_blank" rel="external">mux</a>  </li>
+<li>web服务的请求路由模块  <a href="https://github.com/beego/mux" target="_blank" rel="external">mux</a>  </li>
 <li>搜索引擎的分词模块  <a href="https://github.com/yangyining/IKAnalyzer" target="_blank" rel="external">IKAnalyzer</a> </li>
 <li>搜索推荐：待续</li>
+</ul>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><h3 id="mux"><a href="#mux" class="headerlink" title="mux"></a>mux</h3><ul>
+<li>主要数据结构 <pre><code>type Node struct {<br>  name, allow                  []string  //allow储存的是HTTP Method(Get,Post,Head等等)。name存储的是restful  Uri路径中的正则表达式，在Match时从中获取正则式对应的值<br>  pattern, segment             string //segment:值为strings.Split(Uri, “/“)中的元素。pattern值：当前node的endpoint为True值，值为整个Uri<br>  endpoint, wildcard, optional bool //endpoint:当前node的pattern是完整的Uri时，值为True；wildcard：当strings.Split(Uri, “/“)中的元素值为 <em> 或</em>.<em>时为True，<br>  parent                       </em>Node<br>  segChildren                  []<em>Node<br>  optionChildren               []</em>Node<br>  varyChildren                 []<em>Node<br>  children                     map[string]</em>Node<br>  handlers                     map[string]interface{}<br>  regex                        <em>regexp.Regexp<br>  namedRoutes                  map[string]</em>Node<br>}</code></pre></li>
+<li>fgg</li>
 </ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/06/01/trie/" data-id="cj3e9mg3i0005yyk122hzj1er" class="article-share-link">Partager</a>
+      <a data-url="http://yoursite.com/2017/06/01/trie/" data-id="cj3ecd11e0004kok1rrlniryo" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -148,7 +152,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/05/22/marathon/" data-id="cj3e9mg3g0004yyk1fkh9luqb" class="article-share-link">Partager</a>
+      <a data-url="http://yoursite.com/2017/05/22/marathon/" data-id="cj3ecd11d0003kok1kwabuq57" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -227,7 +231,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/05/16/docker-storage/" data-id="cj3e9mg3b0002yyk1wjxdpl3o" class="article-share-link">Partager</a>
+      <a data-url="http://yoursite.com/2017/05/16/docker-storage/" data-id="cj3ecd1110000kok1s3hvykpc" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -329,7 +333,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/05/15/git/" data-id="cj3e9mg310000yyk1lm6rbi5i" class="article-share-link">Partager</a>
+      <a data-url="http://yoursite.com/2017/05/15/git/" data-id="cj3ecd1170001kok1kath6aip" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -386,7 +390,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/05/15/personBlog/" data-id="cj3e9mg3d0003yyk1llynzddt" class="article-share-link">Partager</a>
+      <a data-url="http://yoursite.com/2017/05/15/personBlog/" data-id="cj3ecd11g0005kok18547wufc" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -431,7 +435,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/05/15/hello-world/" data-id="cj3e9mg370001yyk1n6c18asp" class="article-share-link">Partager</a>
+      <a data-url="http://yoursite.com/2017/05/15/hello-world/" data-id="cj3ecd11a0002kok1c048lus5" class="article-share-link">Partager</a>
       
       
     </footer>

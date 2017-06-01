@@ -5,16 +5,16 @@
   
   <title>Trie树应用详解 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="简介 又名字典树或者前缀树,特点是利用字符串的公共前缀来节约存储空间  性质 根节点不包含字符，除根节点外每一个节点都只包含一个字符 从根节点到某一节点，路径上经过的字符连接起来，为该节点对应的字符串 每个节点的所有子节点包含的字符都不相同。  应用场景 web服务的请求路由模块  mux   搜索引擎的分词模块  IKAnalyzer  搜索推荐：待续">
+  <meta name="description" content="简介 又名字典树或者前缀树,特点是利用字符串的公共前缀来节约存储空间  性质 根节点不包含字符，除根节点外每一个节点都只包含一个字符 从根节点到某一节点，路径上经过的字符连接起来，为该节点对应的字符串 每个节点的所有子节点包含的字符都不相同。  应用场景 web服务的请求路由模块  mux   搜索引擎的分词模块  IKAnalyzer  搜索推荐：待续  分析mux 主要数据结构 type No">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Trie树应用详解">
 <meta property="og:url" content="http://yoursite.com/2017/06/01/trie/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="简介 又名字典树或者前缀树,特点是利用字符串的公共前缀来节约存储空间  性质 根节点不包含字符，除根节点外每一个节点都只包含一个字符 从根节点到某一节点，路径上经过的字符连接起来，为该节点对应的字符串 每个节点的所有子节点包含的字符都不相同。  应用场景 web服务的请求路由模块  mux   搜索引擎的分词模块  IKAnalyzer  搜索推荐：待续">
-<meta property="og:updated_time" content="2017-06-01T10:15:34.000Z">
+<meta property="og:description" content="简介 又名字典树或者前缀树,特点是利用字符串的公共前缀来节约存储空间  性质 根节点不包含字符，除根节点外每一个节点都只包含一个字符 从根节点到某一节点，路径上经过的字符连接起来，为该节点对应的字符串 每个节点的所有子节点包含的字符都不相同。  应用场景 web服务的请求路由模块  mux   搜索引擎的分词模块  IKAnalyzer  搜索推荐：待续  分析mux 主要数据结构 type No">
+<meta property="og:updated_time" content="2017-06-01T11:32:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Trie树应用详解">
-<meta name="twitter:description" content="简介 又名字典树或者前缀树,特点是利用字符串的公共前缀来节约存储空间  性质 根节点不包含字符，除根节点外每一个节点都只包含一个字符 从根节点到某一节点，路径上经过的字符连接起来，为该节点对应的字符串 每个节点的所有子节点包含的字符都不相同。  应用场景 web服务的请求路由模块  mux   搜索引擎的分词模块  IKAnalyzer  搜索推荐：待续">
+<meta name="twitter:description" content="简介 又名字典树或者前缀树,特点是利用字符串的公共前缀来节约存储空间  性质 根节点不包含字符，除根节点外每一个节点都只包含一个字符 从根节点到某一节点，路径上经过的字符连接起来，为该节点对应的字符串 每个节点的所有子节点包含的字符都不相同。  应用场景 web服务的请求路由模块  mux   搜索引擎的分词模块  IKAnalyzer  搜索推荐：待续  分析mux 主要数据结构 type No">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -94,15 +94,19 @@
 <li>每个节点的所有子节点包含的字符都不相同。</li>
 </ul>
 <h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><ul>
-<li>web服务的请求路由模块  <a href="https://github.com/testzlx/mux" target="_blank" rel="external">mux</a>  </li>
+<li>web服务的请求路由模块  <a href="https://github.com/beego/mux" target="_blank" rel="external">mux</a>  </li>
 <li>搜索引擎的分词模块  <a href="https://github.com/yangyining/IKAnalyzer" target="_blank" rel="external">IKAnalyzer</a> </li>
 <li>搜索推荐：待续</li>
+</ul>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><h3 id="mux"><a href="#mux" class="headerlink" title="mux"></a>mux</h3><ul>
+<li>主要数据结构 <pre><code>type Node struct {<br>  name, allow                  []string  //allow储存的是HTTP Method(Get,Post,Head等等)。name存储的是restful  Uri路径中的正则表达式，在Match时从中获取正则式对应的值<br>  pattern, segment             string //segment:值为strings.Split(Uri, “/“)中的元素。pattern值：当前node的endpoint为True值，值为整个Uri<br>  endpoint, wildcard, optional bool //endpoint:当前node的pattern是完整的Uri时，值为True；wildcard：当strings.Split(Uri, “/“)中的元素值为 <em> 或</em>.<em>时为True，<br>  parent                       </em>Node<br>  segChildren                  []<em>Node<br>  optionChildren               []</em>Node<br>  varyChildren                 []<em>Node<br>  children                     map[string]</em>Node<br>  handlers                     map[string]interface{}<br>  regex                        <em>regexp.Regexp<br>  namedRoutes                  map[string]</em>Node<br>}</code></pre></li>
+<li>fgg</li>
 </ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/06/01/trie/" data-id="cj3e9mg3i0005yyk122hzj1er" class="article-share-link">Partager</a>
+      <a data-url="http://yoursite.com/2017/06/01/trie/" data-id="cj3ecd11e0004kok1rrlniryo" class="article-share-link">Partager</a>
       
       
     </footer>
