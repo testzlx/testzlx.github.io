@@ -5,16 +5,16 @@
   
   <title>Trie树应用详解 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="简介 又名字典树或者前缀树,特点是利用字符串的公共前缀来节约存储空间  性质 根节点不包含字符，除根节点外每一个节点都只包含一个字符 从根节点到某一节点，路径上经过的字符连接起来，为该节点对应的字符串 每个节点的所有子节点包含的字符都不相同。  应用场景 web服务的请求路由模块  mux   搜索引擎的分词模块  IKAnalyzer  搜索推荐：待续  分析mux 主要数据结构 type No">
+  <meta name="description" content="简介 又名字典树或者前缀树,特点是利用字符串的公共前缀来节约存储空间  性质 根节点不包含字符，除根节点外每一个节点都只包含一个字符 从根节点到某一节点，路径上经过的字符连接起来，为该节点对应的字符串 每个节点的所有子节点包含的字符都不相同。  应用场景 web服务的请求路由模块  mux   搜索引擎的分词模块  IKAnalyzer  搜索推荐：Suggest  分析mux 主要数据结构 ty">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Trie树应用详解">
 <meta property="og:url" content="http://yoursite.com/2017/06/01/trie/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="简介 又名字典树或者前缀树,特点是利用字符串的公共前缀来节约存储空间  性质 根节点不包含字符，除根节点外每一个节点都只包含一个字符 从根节点到某一节点，路径上经过的字符连接起来，为该节点对应的字符串 每个节点的所有子节点包含的字符都不相同。  应用场景 web服务的请求路由模块  mux   搜索引擎的分词模块  IKAnalyzer  搜索推荐：待续  分析mux 主要数据结构 type No">
-<meta property="og:updated_time" content="2017-06-02T03:01:09.000Z">
+<meta property="og:description" content="简介 又名字典树或者前缀树,特点是利用字符串的公共前缀来节约存储空间  性质 根节点不包含字符，除根节点外每一个节点都只包含一个字符 从根节点到某一节点，路径上经过的字符连接起来，为该节点对应的字符串 每个节点的所有子节点包含的字符都不相同。  应用场景 web服务的请求路由模块  mux   搜索引擎的分词模块  IKAnalyzer  搜索推荐：Suggest  分析mux 主要数据结构 ty">
+<meta property="og:updated_time" content="2017-06-03T13:29:35.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Trie树应用详解">
-<meta name="twitter:description" content="简介 又名字典树或者前缀树,特点是利用字符串的公共前缀来节约存储空间  性质 根节点不包含字符，除根节点外每一个节点都只包含一个字符 从根节点到某一节点，路径上经过的字符连接起来，为该节点对应的字符串 每个节点的所有子节点包含的字符都不相同。  应用场景 web服务的请求路由模块  mux   搜索引擎的分词模块  IKAnalyzer  搜索推荐：待续  分析mux 主要数据结构 type No">
+<meta name="twitter:description" content="简介 又名字典树或者前缀树,特点是利用字符串的公共前缀来节约存储空间  性质 根节点不包含字符，除根节点外每一个节点都只包含一个字符 从根节点到某一节点，路径上经过的字符连接起来，为该节点对应的字符串 每个节点的所有子节点包含的字符都不相同。  应用场景 web服务的请求路由模块  mux   搜索引擎的分词模块  IKAnalyzer  搜索推荐：Suggest  分析mux 主要数据结构 ty">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -96,7 +96,7 @@
 <h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><ul>
 <li>web服务的请求路由模块  <a href="https://github.com/beego/mux" target="_blank" rel="external">mux</a>  </li>
 <li>搜索引擎的分词模块  <a href="https://github.com/yangyining/IKAnalyzer" target="_blank" rel="external">IKAnalyzer</a> </li>
-<li>搜索推荐：待续</li>
+<li>搜索推荐：<a href="https://github.com/testzlx/xinglinzhang/blob/master/SugTest.java" target="_blank" rel="external">Suggest</a></li>
 </ul>
 <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><h3 id="mux"><a href="#mux" class="headerlink" title="mux"></a>mux</h3><ul>
 <li>主要数据结构 <pre><code>type Node struct {<br>  name, allow                  []string  //allow储存的是HTTP Method(Get,Post,Head等等)。name存储的是restful  Uri路径中的正则表达式，在Match时从中获取正则式对应的值<br>  pattern, segment             string //segment:值为strings.Split(Uri, “/“)中的元素。pattern值：当前node的endpoint为True值，值为整个Uri<br>  endpoint, wildcard, optional bool //endpoint:当前node的pattern是完整的Uri时，值为True；wildcard：当strings.Split(Uri, “/“)中的元素值为 <em> 或</em>.<em>时为True，<br>  parent                       </em>Node  //父节点<br>  segChildren                  []<em>Node //此节点存储Uri中包含segment(:id)的子节点<br>  optionChildren               []</em>Node  //此节点存储Uri中包含?的子节点<br>  varyChildren                 []<em>Node //此节点存储Uri中包含</em>或?:的子节点<br>  children                     map[string]<em>Node  //此节点存储Uri中不包含正则的子节点<br>  handlers              // 储存此节点Http Method所对应的驱动事件       map[string]interface{}<br>  regex                        </em>regexp.Regexp  //Uri中包含<em>或者复杂正则(article<em>:id:int),则所对应的值为article</em>([\w]+)<br>  namedRoutes                  map[string]</em>Node  //暂时未使用<br>}<br></code></pre></li>
@@ -189,7 +189,8 @@ if len(parent.name) &gt; 0 {
 start = i + 1
 </code></pre><p>END:</p>
 <ul>
-<li>注意点:获取子节点信息的优先级顺序为: 完全匹配–&gt;精准匹配—&gt; 模糊匹配–&gt;是否存在匹配(按先后顺序)</li>
+<li><p>注意点:获取子节点信息的优先级顺序为: 完全匹配–&gt;精准匹配—&gt; 模糊匹配–&gt;是否存在匹配(按先后顺序)</p>
+<h3 id="IKAnalyzer"><a href="#IKAnalyzer" class="headerlink" title="IKAnalyzer"></a>IKAnalyzer</h3><h3 id="Suggest"><a href="#Suggest" class="headerlink" title="Suggest"></a>Suggest</h3></li>
 </ul>
 </li>
 </ul>
@@ -197,7 +198,7 @@ start = i + 1
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/06/01/trie/" data-id="cj3f9jcsv0005opk1hxqhgjb5" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/06/01/trie/" data-id="cj3hbffw80002hxk1pnkzxp4v" class="article-share-link">Share</a>
       
       
     </footer>
