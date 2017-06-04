@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/06/04/failtureTree/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="简介 完全二叉树 一般用作外部排序的归并排序阶段  优势 场景:m个初始归并段，k路平衡的归并排序 分析：时间主要消耗在磁盘的读写，以上场景每个元素从磁盘读取次数为log(k)m,可见增大k值可以减少磁盘读写次数，但是每次从k个数组中选择一个最值，则需要比较k-1次,n个数时间复杂度为O(n*(k-1))；如果使用败者树，则每次选择最值花费时间为log(2)k,不过空间复杂度为O(k)(存储中间结">
-<meta property="og:updated_time" content="2017-06-04T10:03:58.000Z">
+<meta property="og:updated_time" content="2017-06-04T10:05:38.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="败者树应用详解">
 <meta name="twitter:description" content="简介 完全二叉树 一般用作外部排序的归并排序阶段  优势 场景:m个初始归并段，k路平衡的归并排序 分析：时间主要消耗在磁盘的读写，以上场景每个元素从磁盘读取次数为log(k)m,可见增大k值可以减少磁盘读写次数，但是每次从k个数组中选择一个最值，则需要比较k-1次,n个数时间复杂度为O(n*(k-1))；如果使用败者树，则每次选择最值花费时间为log(2)k,不过空间复杂度为O(k)(存储中间结">
@@ -52,9 +52,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
@@ -93,14 +93,12 @@
 <li>场景:m个初始归并段，k路平衡的归并排序</li>
 <li>分析：时间主要消耗在磁盘的读写，以上场景每个元素从磁盘读取次数为log(k)m,可见增大k值可以减少磁盘读写次数，但是每次从k个数组中选择一个最值，则需要比较k-1次,n个数时间复杂度为O(n*(k-1))；如果使用败者树，则每次选择最值花费时间为log(2)k,不过空间复杂度为O(k)(存储中间结果)</li>
 </ul>
-<h2 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h2><p><pre><code><br>int[] ls = new int[k]<br>void createLoserTree(int[] arr,int k){<br> int i;<br> for(i = 0;i &lt; k;i++){<br>     ls[i] = -1;<br>     }<br> for(i = k-1;i &gt;= 0;i– ){<br>       adjust(arr,k,i);<br>     }<br>}</code></pre></p>
-<p>void adjust(int[] arr,int length,int index){<br>    int t = (length+index)/2<br>    while(t &gt; 0 ){<br>        if(ls[t] ==-1 || arr[index] &gt; arr[ls[t]}){<br>             swap(index,ls[t])<br>        }<br>        t = t &gt;&gt; 2<br>    }<br>    ls[0] = s<br>}</p>
-<p>void kMerge(int k){<br> int i,arr[] = new int[k]<br> for(i = 0;i &lt; k;i++){<br>     input(i,arr)      //从第i个归并段pop数到arr中<br> }<br> createLoserTree(arr,k)<br> while(arr[ls[0]] != MAXVALUE){<br>     int tmp = ls[0];<br>     outPut(arr[ls[0]])<br>     input(tmp,arr) //如果第i个归并段没数据了，则进入arr中的值为MAXVALUE<br>     adjust(tmp)<br> }<br>}<br></p>
+<h2 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h2><p><pre><code><br>int[] ls = new int[k]<br>void createLoserTree(int[] arr,int k){<br> int i;<br> for(i = 0;i &lt; k;i++){<br>     ls[i] = -1;<br>     }<br> for(i = k-1;i &gt;= 0;i– ){<br>       adjust(arr,k,i);<br>     }<br>}<br>void adjust(int[] arr,int length,int index){<br>    int t = (length+index)/2<br>    while(t &gt; 0 ){<br>        if(ls[t] ==-1 || arr[index] &gt; arr[ls[t]}){<br>             swap(index,ls[t])<br>        }<br>        t = t &gt;&gt; 2<br>    }<br>    ls[0] = s<br>}<br>void kMerge(int k){<br> int i,arr[] = new int[k]<br> for(i = 0;i &lt; k;i++){<br>     input(i,arr)      //从第i个归并段pop数到arr中<br> }<br> createLoserTree(arr,k)<br> while(arr[ls[0]] != MAXVALUE){<br>     int tmp = ls[0];<br>     outPut(arr[ls[0]])<br>     input(tmp,arr) //如果第i个归并段没数据了，则进入arr中的值为MAXVALUE<br>     adjust(tmp)<br> }<br>}<br></code></pre></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/06/04/failtureTree/" data-id="cj3ijjdc500013gk1utjn4cc3" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/06/04/failtureTree/" data-id="cj3ijkv7m000158k1l44s0bzy" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -111,7 +109,7 @@
   
   
     <a href="/2017/06/01/trie/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
+      <strong class="article-nav-caption">Ancien</strong>
       <div class="article-nav-title">Trie树应用详解</div>
     </a>
   
@@ -144,7 +142,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">Articles récents</h3>
     <div class="widget">
       <ul>
         
@@ -181,7 +179,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2017 John Doe<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
