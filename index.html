@@ -61,6 +61,53 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-failtureTree" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/06/04/failtureTree/" class="article-date">
+  <time datetime="2017-06-04T09:20:37.000Z" itemprop="datePublished">2017-06-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/04/failtureTree/">败者树应用详解</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><ul>
+<li>完全二叉树</li>
+<li>一般用作外部排序的归并排序阶段</li>
+</ul>
+<h2 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h2><ul>
+<li>场景:m个初始归并段，k路平衡的归并排序</li>
+<li>分析：时间主要消耗在磁盘的读写，以上场景每个元素从磁盘读取次数为log(k)m,可见增大k值可以减少磁盘读写次数，但是每次从k个数组中选择一个最值，则需要比较k-1次,n个数时间复杂度为O(n*(k-1))；如果使用败者树，则每次选择最值花费时间为log(2)k,不过空间复杂度为O(k)(存储中间结果)</li>
+</ul>
+<h2 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h2><p><pre><code><br>int[] ls = new int[k]<br>void createLoserTree(int[] arr,int k){<br> int i;<br> for(i = 0;i &lt; k;i++){<br>     ls[i] = -1;<br>     }<br> for(i = k-1;i &gt;= 0;i– ){<br>       adjust(arr,k,i);<br>     }<br>}</code></pre></p>
+<p>void adjust(int[] arr,int length,int index){<br>    int t = (length+index)/2<br>    while(t &gt; 0 ){<br>        if(ls[t] ==-1 || arr[index] &gt; arr[ls[t]}){<br>             swap(index,ls[t])<br>        }<br>        t = t &gt;&gt; 2<br>    }<br>    ls[0] = s<br>}</p>
+<p>void kMerge(int k){<br> int i,arr[] = new int[k]<br> for(i = 0;i &lt; k;i++){<br>     input(i,arr)      //从第i个归并段pop数到arr中<br> }<br> createLoserTree(arr,k)<br> while(arr[ls[0]] != MAXVALUE){<br>     int tmp = ls[0];<br>     outPut(arr[ls[0]])<br>     input(tmp,arr) //如果第i个归并段没数据了，则进入arr中的值为MAXVALUE<br>     adjust(tmp)<br> }<br>}<br></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/06/04/failtureTree/" data-id="cj3ijjdc500013gk1utjn4cc3" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-trie" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2017/06/01/trie/" class="article-date">
@@ -196,7 +243,7 @@ start = i + 1
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/06/01/trie/" data-id="cj3hbffw80002hxk1pnkzxp4v" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/06/01/trie/" data-id="cj3ijjdch00063gk1uzj4dqnv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -244,7 +291,7 @@ start = i + 1
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/05/22/marathon/" data-id="cj3hbffwd0004hxk1pkk0qfzt" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/05/22/marathon/" data-id="cj3ijjdce00053gk1cztebs0f" class="article-share-link">Share</a>
       
       
     </footer>
@@ -323,7 +370,7 @@ start = i + 1
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/05/16/docker-storage/" data-id="cj3hbffw00000hxk1akd5mqwy" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/05/16/docker-storage/" data-id="cj3ijjdc000003gk1atupoqqi" class="article-share-link">Share</a>
       
       
     </footer>
@@ -425,7 +472,7 @@ start = i + 1
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/05/15/git/" data-id="cj3hbffw50001hxk1ms9qpivx" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/05/15/git/" data-id="cj3ijjdc800023gk10zbte1ub" class="article-share-link">Share</a>
       
       
     </footer>
@@ -482,7 +529,7 @@ start = i + 1
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/05/15/personBlog/" data-id="cj3hbffwf0005hxk1a0cwd5cu" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/05/15/personBlog/" data-id="cj3ijjdcc00043gk1dzx3o247" class="article-share-link">Share</a>
       
       
     </footer>
@@ -527,7 +574,7 @@ start = i + 1
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/05/15/hello-world/" data-id="cj3hbffwb0003hxk16ntcbama" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/05/15/hello-world/" data-id="cj3ijjdcb00033gk175nylcxr" class="article-share-link">Share</a>
       
       
     </footer>
@@ -567,6 +614,10 @@ start = i + 1
       <ul>
         
           <li>
+            <a href="/2017/06/04/failtureTree/">败者树应用详解</a>
+          </li>
+        
+          <li>
             <a href="/2017/06/01/trie/">Trie树应用详解</a>
           </li>
         
@@ -580,10 +631,6 @@ start = i + 1
         
           <li>
             <a href="/2017/05/15/git/">git use</a>
-          </li>
-        
-          <li>
-            <a href="/2017/05/15/personBlog/">搭建个人博客</a>
           </li>
         
       </ul>
