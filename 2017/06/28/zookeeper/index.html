@@ -3,20 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>marathon部署系统 | Hexo</title>
+  <title>zookeeper 部分源码分析 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="简介 使用组件: docker ，mesos，marathon,服务发现，分布式日志收集，docker registry，gitlab，jenkins  优势 简单易用，真正做到一键部署，提升服务部署效率 灵活扩展，服务实现自动扩缩容，故障自动拉起，保证服务稳定运行 对应用业务侵入几乎为0，用户只需提供日志目录，开放端口，所需cpu，mem，对外使用域名即可 安全可靠，资源高度隔离，用户独享计算资">
+  <meta name="description" content="基本命令">
 <meta property="og:type" content="article">
-<meta property="og:title" content="marathon部署系统">
-<meta property="og:url" content="http://yoursite.com/2017/05/22/marathon/index.html">
+<meta property="og:title" content="zookeeper 部分源码分析">
+<meta property="og:url" content="http://yoursite.com/2017/06/28/zookeeper/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="简介 使用组件: docker ，mesos，marathon,服务发现，分布式日志收集，docker registry，gitlab，jenkins  优势 简单易用，真正做到一键部署，提升服务部署效率 灵活扩展，服务实现自动扩缩容，故障自动拉起，保证服务稳定运行 对应用业务侵入几乎为0，用户只需提供日志目录，开放端口，所需cpu，mem，对外使用域名即可 安全可靠，资源高度隔离，用户独享计算资">
-<meta property="og:image" content="https://raw.githubusercontent.com/testzlx/pictures/master/20170522.jpg">
-<meta property="og:updated_time" content="2017-05-22T09:25:40.000Z">
+<meta property="og:description" content="基本命令">
+<meta property="og:updated_time" content="2017-06-28T07:02:08.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="marathon部署系统">
-<meta name="twitter:description" content="简介 使用组件: docker ，mesos，marathon,服务发现，分布式日志收集，docker registry，gitlab，jenkins  优势 简单易用，真正做到一键部署，提升服务部署效率 灵活扩展，服务实现自动扩缩容，故障自动拉起，保证服务稳定运行 对应用业务侵入几乎为0，用户只需提供日志目录，开放端口，所需cpu，mem，对外使用域名即可 安全可靠，资源高度隔离，用户独享计算资">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/testzlx/pictures/master/20170522.jpg">
+<meta name="twitter:title" content="zookeeper 部分源码分析">
+<meta name="twitter:description" content="基本命令">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -65,10 +63,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-marathon" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-zookeeper" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2017/05/22/marathon/" class="article-date">
-  <time datetime="2017-05-22T08:40:59.000Z" itemprop="datePublished">2017-05-22</time>
+    <a href="/2017/06/28/zookeeper/" class="article-date">
+  <time datetime="2017-06-28T07:02:08.000Z" itemprop="datePublished">2017-06-28</time>
 </a>
     
   </div>
@@ -79,7 +77,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      marathon部署系统
+      zookeeper 部分源码分析
     </h1>
   
 
@@ -87,23 +85,11 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><ul>
-<li>使用组件: docker ，mesos，marathon,服务发现，分布式日志收集，docker registry，gitlab，jenkins</li>
-</ul>
-<h2 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h2><ul>
-<li>简单易用，真正做到一键部署，提升服务部署效率</li>
-<li>灵活扩展，服务实现自动扩缩容，故障自动拉起，保证服务稳定运行</li>
-<li>对应用业务侵入几乎为0，用户只需提供日志目录，开放端口，所需cpu，mem，对外使用域名即可</li>
-<li>安全可靠，资源高度隔离，用户独享计算资源，容器运行负载实时监控、快速迁移</li>
-<li>高效，镜像极速上传下载海量容器秒级启动,使用容器服务进行构建、打包集成</li>
-<li>集群管理：对用户透明，不影响线上服务。简单快速，集群规模大小控制随心所欲</li>
-</ul>
-<h2 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h2><p><img src="https://raw.githubusercontent.com/testzlx/pictures/master/20170522.jpg" alt="tupian"></p>
-
+        <h2 id="基本命令"><a href="#基本命令" class="headerlink" title="基本命令"></a>基本命令</h2>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/05/22/marathon/" data-id="cj4gnm0yx0004zgk1mqqf3ak7" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/06/28/zookeeper/" data-id="cj4gnm0yz0005zgk1hs9c6gwt" class="article-share-link">Share</a>
       
       
     </footer>
@@ -112,19 +98,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2017/06/01/trie/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Trie树应用详解
-        
-      </div>
-    </a>
   
-  
-    <a href="/2017/05/16/docker-storage/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2017/06/05/restfulGateway/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">docker storage</div>
+      <div class="article-nav-title">restful服务网关架构设计</div>
     </a>
   
 </nav>
