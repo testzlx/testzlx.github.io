@@ -83,121 +83,11 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><ul>
-<li>又名字典树或者前缀树,特点是利用字符串的公共前缀来节约存储空间</li>
-</ul>
-<h2 id="性质"><a href="#性质" class="headerlink" title="性质"></a>性质</h2><ul>
-<li>根节点不包含字符，除根节点外每一个节点都只包含一个字符</li>
-<li>从根节点到某一节点，路径上经过的字符连接起来，为该节点对应的字符串</li>
-<li>每个节点的所有子节点包含的字符都不相同。</li>
-</ul>
-<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><ul>
-<li>web服务的请求路由模块  <a href="https://github.com/beego/mux" target="_blank" rel="external">mux</a>  </li>
-<li>搜索引擎的分词模块  <a href="https://github.com/yangyining/IKAnalyzer" target="_blank" rel="external">IKAnalyzer</a> </li>
-<li>搜索推荐：<a href="https://github.com/testzlx/xinglinzhang/blob/master/SugTest.java" target="_blank" rel="external">Suggest</a></li>
-</ul>
-<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><h3 id="mux"><a href="#mux" class="headerlink" title="mux"></a>mux</h3><ul>
-<li>主要数据结构 <pre><code>type Node struct {<br>  name, allow                  []string  //allow储存的是HTTP Method(Get,Post,Head等等)。name存储的是restful  Uri路径中的正则表达式，在Match时从中获取正则式对应的值<br>  pattern, segment             string //segment:值为strings.Split(Uri, “/“)中的元素。pattern值：当前node的endpoint为True值，值为整个Uri<br>  endpoint, wildcard, optional bool //endpoint:当前node的pattern是完整的Uri时，值为True；wildcard：当strings.Split(Uri, “/“)中的元素值为 <em> 或</em>.<em>时为True，<br>  parent                       </em>Node  //父节点<br>  segChildren                  []<em>Node //此节点存储Uri中包含segment(:id)的子节点<br>  optionChildren               []</em>Node  //此节点存储Uri中包含?的子节点<br>  varyChildren                 []<em>Node //此节点存储Uri中包含</em>或?:的子节点<br>  children                     map[string]<em>Node  //此节点存储Uri中不包含正则的子节点<br>  handlers              // 储存此节点Http Method所对应的驱动事件       map[string]interface{}<br>  regex                        </em>regexp.Regexp  //Uri中包含<em>或者复杂正则(article<em>:id:int),则所对应的值为article</em>([\w]+)<br>  namedRoutes                  map[string]</em>Node  //暂时未使用<br>}<br></code></pre></li>
-<li><p>插入过程:</p>
-<ul>
-<li>先把整个Uri按/分割成数组，选择第一个segment元素，查找所对应的节点A，有就返回，没有就创建，再选择余下的元素和节点A，递归调用，直至余下数组个数为0 </li>
-<li>根据当前segment查找对应的节点逻辑如下:先看parent的children哈希中是否存在，有就返回，没有就创建，再根据当前segment正则特征关联上parent节点，代码如下<pre><code><br>if segment == “” {<br>  parent.children[segment] = node<br>} else if strings.Contains(segment, “::”) {<br>  parent.children[strings.Replace(segment, “::”, “:”, -1)] = node<br>} else if segment == “<em>“ {<br>  node.wildcard = true<br>  node.regex = wildRegexp<br>  node.name = []string{“:splat”}<br>  parent.varyChildren = append(parent.varyChildren, node)<br>} else if segment == “</em>.*” {<br>  node.wildcard = true<br>  node.regex = extWildRegexp<br>  node.name = []string{“:path”, “:ext”}<br>  parent.varyChildren = append(parent.varyChildren, node)<br>} else if optionalParamRegexp.MatchString(segment) {<br>  node.optional = true<br>  node.name = []string{segment[1:]}<br>  parent.optionChildren = append(parent.optionChildren, node)<br>  parent.segChildren = append(parent.segChildren, node)<br>} else if paramRegexp.MatchString(segment) {<br>  node.name = []string{segment}<br>  parent.segChildren = append(parent.segChildren, node)<br>} else if strings.ContainsAny(segment, “:”) {<br>  node.name, node.regex, node.optional = regexpSegment(segment)<br>  if node.optional {            parent.optionChildren=append(parent.optionChildren, node)<br>  }<br>  parent.varyChildren = append(parent.varyChildren, node)<br>} else {<br>  parent.children[segment] = node<br>}</code></pre> </li>
-</ul>
-</li>
-<li><p>match过程:    逐字节遍历Uri，直到分隔符/,在trie树中获取所对应的字节点，如果当前字节点没有正则信息，则继续遍历，否则抽取其中信息(键值对)放入match的Param中,关键代码如下<pre><code><br>for i := 1; i &lt;= end; i++ {</code></pre></p>
-<pre><code>if i &lt; end &amp;&amp; path[i] != &apos;/&apos; {
-    continue
-}
-segment := path[start:i]
-node := matchNode(parent, segment, path[i:])
-if node == nil {
-    // TrailingSlashRedirect: /abc/efg/ -&gt; /abc/efg
-    if parent.endpoint &amp;&amp; i == end &amp;&amp; segment == &quot;&quot; {
-        matched.Path = path[:end-1]
-    }
-    // match suffixext match
-    if i == end {
-        for _, ext := range allowSuffixExt {
-            if strings.HasSuffix(segment, ext) {
-                node = matchNode(parent, strings.TrimSuffix(segment, ext), path[i:])
-                if node != nil {
-                    if matched.Params == nil {
-                        matched.Params = make(map[string]string)
-                    }
-                    matched.Params[&quot;:ext&quot;] = ext[1:]
-                    goto ParentNode
-                }
-            }
-        }
-    }
-    return matched, nil
-}
-ParentNode:
-parent = node
-if len(parent.name) &gt; 0 {
-    if matched.Params == nil {
-        matched.Params = make(map[string]string)
-    }
-    if parent.wildcard {
-        // match *
-        if len(parent.name) == 1 {
-            segs := strings.Split(path[start:end], &quot;/&quot;)
-            starValue := []string{}
-            for {
-                if len(segs) &gt; 0 {
-                    starValue = append(starValue, segs[0])
-                }
-                if len(segs) == 1 {
-                    break
-                } else {
-                    segs = segs[1:]
-                }
-                n := matchNode(parent, segs[0], strings.Join(segs, &quot;/&quot;))
-                if n != nil {
-                    matched.Params[parent.name[0]] = strings.Join(starValue, &quot;/&quot;)
-                    parent = n
-                    i = i + 1 + len(segs[0])
-                    start = start + len(strings.Join(starValue, &quot;/&quot;))
-                    goto END
-                } else {
-                    i = i + 1 + len(segs[0])
-                }
-            }
-            matched.Params[parent.name[0]] = strings.Join(starValue, &quot;/&quot;)
-        } else {
-            // match *.*
-            values := parent.regex.FindStringSubmatch(path[start:end])
-            if len(values) != len(parent.name)+1 {
-                return nil, fmt.Errorf(&quot;%s: Find wrong match %v, need names %v&quot;, path, values, parent.name)
-            }
-            for i, name := range parent.name {
-                matched.Params[name] = values[i+1]
-            }
-        }
-        break
-    } else if parent.regex == nil { // :name
-        matched.Params[parent.name[0]] = segment
-    } else {
-        values := parent.regex.FindStringSubmatch(segment)
-        for i, name := range parent.name {
-            matched.Params[name] = values[i+1]
-        }
-    }
-}
-start = i + 1
-END:
-</code></pre><p></p>
-<ul>
-<li><p>注意点:获取子节点信息的优先级顺序为: 完全匹配–&gt;精准匹配—&gt; 模糊匹配–&gt;是否存在匹配(按先后顺序)</p>
-<h3 id="IKAnalyzer"><a href="#IKAnalyzer" class="headerlink" title="IKAnalyzer"></a>IKAnalyzer</h3><h3 id="Suggest"><a href="#Suggest" class="headerlink" title="Suggest"></a>Suggest</h3></li>
-</ul>
-</li>
-</ul>
-
+        <h2 id="单机模式"><a href="#单机模式" class="headerlink" title="单机模式"></a>单机模式</h2><h2 id="分布式集群"><a href="#分布式集群" class="headerlink" title="分布式集群"></a>分布式集群</h2>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/06/28/zookeeper/" data-id="cj4gnzrgz000880k111rri65z" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/06/28/zookeeper/" data-id="cj4go4jx10008evk19usw32hy" class="article-share-link">Share</a>
       
       
     </footer>
@@ -237,7 +127,7 @@ END:
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/06/05/restfulGateway/" data-id="cj4gnzrgs000680k17y73i2u0" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/06/05/restfulGateway/" data-id="cj4go4jwv0006evk1g6p8j7i0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -282,7 +172,7 @@ END:
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/06/04/failtureTree/" data-id="cj4gnzrgf000180k10l98ngbt" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/06/04/failtureTree/" data-id="cj4go4jwj0001evk1qv99milf" class="article-share-link">Share</a>
       
       
     </footer>
@@ -428,7 +318,7 @@ END:
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/06/01/trie/" data-id="cj4gnzrgu000780k1ehf74cmy" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/06/01/trie/" data-id="cj4go4jwx0007evk13qe8u21i" class="article-share-link">Share</a>
       
       
     </footer>
@@ -476,7 +366,7 @@ END:
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/05/22/marathon/" data-id="cj4gnzrgn000480k1r216kugq" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/05/22/marathon/" data-id="cj4go4jwq0004evk1io8g0ofg" class="article-share-link">Share</a>
       
       
     </footer>
@@ -555,7 +445,7 @@ END:
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/05/16/docker-storage/" data-id="cj4gnzrga000080k1x8f6n5ft" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/05/16/docker-storage/" data-id="cj4go4jwd0000evk181l1k26a" class="article-share-link">Share</a>
       
       
     </footer>
@@ -657,7 +547,7 @@ END:
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/05/15/git/" data-id="cj4gnzrgi000280k12wls9msc" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/05/15/git/" data-id="cj4go4jwm0002evk17imaux83" class="article-share-link">Share</a>
       
       
     </footer>
@@ -718,7 +608,7 @@ END:
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/05/15/personBlog/" data-id="cj4gnzrgp000580k1kz1e34nf" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/05/15/personBlog/" data-id="cj4go4jws0005evk1wsk4vm3o" class="article-share-link">Share</a>
       
       
     </footer>
@@ -763,7 +653,7 @@ END:
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/05/15/hello-world/" data-id="cj4gnzrgl000380k1gepl2976" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/05/15/hello-world/" data-id="cj4go4jwo0003evk15s2x08g9" class="article-share-link">Share</a>
       
       
     </footer>
