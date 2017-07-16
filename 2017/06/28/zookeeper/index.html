@@ -5,16 +5,18 @@
   
   <title>zookeeper源码分析 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="单机模式 启动过程：  启动一定时任务，清除dataDir,snapDir目录文件 使用反射，注册log对象(作用不理解)” 启动JettyAdminServer对象，用途作为用户admin时的后台相应服务 启动cnxnFactory对象  expireThread: 移除超时连接 selectorThread: 网络io事件监听线程 numWorkerThread: workerPool,线程池">
+  <meta name="description" content="单机模式 启动过程： 启动一定时任务，清除dataDir,snapDir目录文件 使用反射，注册log对象(作用不理解)” 启动JettyAdminServer对象，用途作为用户admin时的后台相应服务 启动cnxnFactory对象 expireThread: 移除超时连接 selectorThread: 网络io事件监听线程 numWorkerThread: workerPool,线程池模型">
 <meta property="og:type" content="article">
 <meta property="og:title" content="zookeeper源码分析">
 <meta property="og:url" content="http://yoursite.com/2017/06/28/zookeeper/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="单机模式 启动过程：  启动一定时任务，清除dataDir,snapDir目录文件 使用反射，注册log对象(作用不理解)” 启动JettyAdminServer对象，用途作为用户admin时的后台相应服务 启动cnxnFactory对象  expireThread: 移除超时连接 selectorThread: 网络io事件监听线程 numWorkerThread: workerPool,线程池">
-<meta property="og:updated_time" content="2017-07-02T08:33:20.000Z">
+<meta property="og:description" content="单机模式 启动过程： 启动一定时任务，清除dataDir,snapDir目录文件 使用反射，注册log对象(作用不理解)” 启动JettyAdminServer对象，用途作为用户admin时的后台相应服务 启动cnxnFactory对象 expireThread: 移除超时连接 selectorThread: 网络io事件监听线程 numWorkerThread: workerPool,线程池模型">
+<meta property="og:image" content="https://raw.githubusercontent.com/testzlx/pictures/master/threadpool.jpg">
+<meta property="og:updated_time" content="2017-07-16T15:55:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="zookeeper源码分析">
-<meta name="twitter:description" content="单机模式 启动过程：  启动一定时任务，清除dataDir,snapDir目录文件 使用反射，注册log对象(作用不理解)” 启动JettyAdminServer对象，用途作为用户admin时的后台相应服务 启动cnxnFactory对象  expireThread: 移除超时连接 selectorThread: 网络io事件监听线程 numWorkerThread: workerPool,线程池">
+<meta name="twitter:description" content="单机模式 启动过程： 启动一定时任务，清除dataDir,snapDir目录文件 使用反射，注册log对象(作用不理解)” 启动JettyAdminServer对象，用途作为用户admin时的后台相应服务 启动cnxnFactory对象 expireThread: 移除超时连接 selectorThread: 网络io事件监听线程 numWorkerThread: workerPool,线程池模型">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/testzlx/pictures/master/threadpool.jpg">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -86,36 +88,69 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="单机模式"><a href="#单机模式" class="headerlink" title="单机模式"></a>单机模式</h2><ul>
-<li><p>启动过程：</p>
-<ul>
+<li>启动过程：<ul>
 <li>启动一定时任务，清除dataDir,snapDir目录文件</li>
 <li><font color="#DC143C" size="3">使用反射，注册log对象(作用不理解)”</font></li>
 <li>启动JettyAdminServer对象，用途作为用户admin时的后台相应服务</li>
-<li><p>启动cnxnFactory对象</p>
-<ul>
+<li>启动cnxnFactory对象<ul>
 <li>expireThread: 移除超时连接</li>
 <li>selectorThread: 网络io事件监听线程</li>
 <li>numWorkerThread: workerPool,线程池模型，处理io请求</li>
 <li>acceptThread:处理客户端连接请求 </li>
-<li>zookeeperServer：从本地磁盘读取信息到zkDb中</li>
-</ul>
-</li>
-<li><p>启动containerManager：使用zookeeperServer中的requestProcess定时处理内存中dataNode(curd及添加watcher)         </p>
-</li>
+<li>zookeeperServer：从本地磁盘读取信息到zkDb中<ul>
+<li>启动containerManager：使用zookeeperServer中的requestProcess定时处理内存中dataNode(curd及添加watcher)         </li>
 </ul>
 </li>
 </ul>
-<h3 id="网络模块"><a href="#网络模块" class="headerlink" title="网络模块"></a>网络模块</h3><h3 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h3><h3 id="zkDatabase，zookeeperServer"><a href="#zkDatabase，zookeeperServer" class="headerlink" title="zkDatabase，zookeeperServer"></a>zkDatabase，zookeeperServer</h3><h2 id="分布式集群"><a href="#分布式集群" class="headerlink" title="分布式集群"></a>分布式集群</h2><ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="网络模块"><a href="#网络模块" class="headerlink" title="网络模块"></a>网络模块</h3><ul>
+<li>NIO </li>
+</ul>
+<h3 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h3><h4 id="java线程池（符合生产者-消费者模型）"><a href="#java线程池（符合生产者-消费者模型）" class="headerlink" title="java线程池（符合生产者-消费者模型）"></a>java线程池（符合生产者-消费者模型）</h4><ul>
+<li><p>应用场景</p>
+<ul>
+<li>大量任务</li>
+<li>每个任务执行周期不长 </li>
+</ul>
+</li>
+<li><p>优点</p>
+<ul>
+<li>降低资源消耗，利用已有线程减少线程创建或销毁的消耗</li>
+<li>提高响应速度，工作线程提前准备好了        </li>
+</ul>
+</li>
+<li><p>参数说明：corePoolSize,maxmumPoolSize,blockinqueue,keepAliveTime,RejectedExecutionHandler</p>
+</li>
+<li><p>工作过程</p>
+<ul>
+<li><img src="https://raw.githubusercontent.com/testzlx/pictures/master/threadpool.jpg" alt="tupian"></li>
+</ul>
+</li>
+<li>疑问<ul>
+<li>为何是阻塞队列（小米面试）？ 如果是非阻塞队列，线程个数的增减与任务提交需要额外的同步策略，而使用阻塞队列，编程简单些</li>
+</ul>
+</li>
+</ul>
+<h3 id="zkDatabase，zookeeperServer-dataTree"><a href="#zkDatabase，zookeeperServer-dataTree" class="headerlink" title="zkDatabase，zookeeperServer,dataTree"></a>zkDatabase，zookeeperServer,dataTree</h3><h2 id="分布式集群"><a href="#分布式集群" class="headerlink" title="分布式集群"></a>分布式集群</h2><ul>
 <li>选主paoxs算法</li>
 </ul>
-<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><ul>
+<li>选主</li>
+<li>动态读取配置文件</li>
+<li>分布式锁</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a href="http://blog.csdn.net/testcs_dn/article/details/45719357" target="_blank" rel="external">markdown字体颜色</a></li>
+<li><a href="http://www.infoq.com/cn/articles/java-threadPool" target="_blank" rel="external">阿里工程师对线程池思考</a></li>
 </ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/06/28/zookeeper/" data-id="cj4mgm32k0008y2k1syk85fmz" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/06/28/zookeeper/" data-id="cj56wlojc00049xk1998i90oi" class="article-share-link">Share</a>
       
       
     </footer>
