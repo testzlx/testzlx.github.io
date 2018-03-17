@@ -3,20 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>marathon部署系统 | Hexo</title>
+  <title>搭建个人博客 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="简介 使用组件: docker ，mesos，marathon,服务发现，分布式日志收集，docker registry，gitlab，jenkins  优势 简单易用，真正做到一键部署，提升服务部署效率 灵活扩展，服务实现自动扩缩容，故障自动拉起，保证服务稳定运行 对应用业务侵入几乎为0，用户只需提供日志目录，开放端口，所需cpu，mem，对外使用域名即可 安全可靠，资源高度隔离，用户独享计算资">
+  <meta name="description" content="##简介   使用github pages和hexo和markdown github pages有300M免费空间  ##步骤  在github上创建repository，名称为githubUsername.github.io 本地安装node及npm 本地安装命令如下  123456npm install hexo-cli -ghexo init blogcd blognpm installhe">
 <meta property="og:type" content="article">
-<meta property="og:title" content="marathon部署系统">
-<meta property="og:url" content="http://yoursite.com/2017/05/22/marathon/index.html">
+<meta property="og:title" content="搭建个人博客">
+<meta property="og:url" content="http://yoursite.com/2018/03/17/personBlog/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="简介 使用组件: docker ，mesos，marathon,服务发现，分布式日志收集，docker registry，gitlab，jenkins  优势 简单易用，真正做到一键部署，提升服务部署效率 灵活扩展，服务实现自动扩缩容，故障自动拉起，保证服务稳定运行 对应用业务侵入几乎为0，用户只需提供日志目录，开放端口，所需cpu，mem，对外使用域名即可 安全可靠，资源高度隔离，用户独享计算资">
-<meta property="og:image" content="https://raw.githubusercontent.com/testzlx/pictures/master/20170522.jpg">
-<meta property="og:updated_time" content="2017-05-22T09:25:40.000Z">
+<meta property="og:description" content="##简介   使用github pages和hexo和markdown github pages有300M免费空间  ##步骤  在github上创建repository，名称为githubUsername.github.io 本地安装node及npm 本地安装命令如下  123456npm install hexo-cli -ghexo init blogcd blognpm installhe">
+<meta property="og:updated_time" content="2018-03-17T13:38:19.737Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="marathon部署系统">
-<meta name="twitter:description" content="简介 使用组件: docker ，mesos，marathon,服务发现，分布式日志收集，docker registry，gitlab，jenkins  优势 简单易用，真正做到一键部署，提升服务部署效率 灵活扩展，服务实现自动扩缩容，故障自动拉起，保证服务稳定运行 对应用业务侵入几乎为0，用户只需提供日志目录，开放端口，所需cpu，mem，对外使用域名即可 安全可靠，资源高度隔离，用户独享计算资">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/testzlx/pictures/master/20170522.jpg">
+<meta name="twitter:title" content="搭建个人博客">
+<meta name="twitter:description" content="##简介   使用github pages和hexo和markdown github pages有300M免费空间  ##步骤  在github上创建repository，名称为githubUsername.github.io 本地安装node及npm 本地安装命令如下  123456npm install hexo-cli -ghexo init blogcd blognpm installhe">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -65,10 +63,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-marathon" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-personBlog" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2017/05/22/marathon/" class="article-date">
-  <time datetime="2017-05-22T08:40:59.000Z" itemprop="datePublished">2017-05-22</time>
+    <a href="/2018/03/17/personBlog/" class="article-date">
+  <time datetime="2018-03-17T13:38:19.737Z" itemprop="datePublished">2018-03-17</time>
 </a>
     
   </div>
@@ -79,7 +77,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      marathon部署系统
+      搭建个人博客
     </h1>
   
 
@@ -87,23 +85,35 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><ul>
-<li>使用组件: docker ，mesos，marathon,服务发现，分布式日志收集，docker registry，gitlab，jenkins</li>
+        <p>##简介 </p>
+<ul>
+<li>使用github pages和hexo和markdown</li>
+<li>github pages有300M免费空间</li>
 </ul>
-<h2 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h2><ul>
-<li>简单易用，真正做到一键部署，提升服务部署效率</li>
-<li>灵活扩展，服务实现自动扩缩容，故障自动拉起，保证服务稳定运行</li>
-<li>对应用业务侵入几乎为0，用户只需提供日志目录，开放端口，所需cpu，mem，对外使用域名即可</li>
-<li>安全可靠，资源高度隔离，用户独享计算资源，容器运行负载实时监控、快速迁移</li>
-<li>高效，镜像极速上传下载海量容器秒级启动,使用容器服务进行构建、打包集成</li>
-<li>集群管理：对用户透明，不影响线上服务。简单快速，集群规模大小控制随心所欲</li>
+<p>##步骤</p>
+<ol>
+<li>在github上创建repository，名称为githubUsername.github.io</li>
+<li>本地安装node及npm</li>
+<li>本地安装命令如下</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">npm install hexo-cli -g</div><div class="line">hexo init blog</div><div class="line">cd blog</div><div class="line">npm install</div><div class="line">hexo server</div><div class="line">npm install hexo-deployer-git --save</div></pre></td></tr></table></figure>
+<ol>
+<li>检验方法:本地访问<a href="http://localhost:4000/" target="_blank" rel="external">http://localhost:4000/</a></li>
+<li>修改以上命令创建的blog目录下_config.yml文件,内容如下</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">deploy:</div><div class="line">	type: git</div><div class="line"> 	repo: https://github.com/testzlx/testzlx.github.io.git</div><div class="line">	branch: master</div><div class="line">```  </div><div class="line"></div><div class="line">6. 在blog/source/_posts下添加md文件</div><div class="line">7. 执行如下命令即可完成部署</div></pre></td></tr></table></figure>
+<p> hexo generate<br> hexo deploy</p>
+<p>```</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://hexo.io" target="_blank" rel="external">hexo官网</a></li>
+<li><a href="http://crazymilk.github.io/2015/12/28/GitHub-Pages-Hexo搭建博客/" target="_blank" rel="external">hexo搭建</a></li>
+<li><a href="http://blog.csdn.net/poem_of_sunshine/article/details/29369785" target="_blank" rel="external">hexo搭建2</a></li>
 </ul>
-<h2 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h2><p><img src="https://raw.githubusercontent.com/testzlx/pictures/master/20170522.jpg" alt="tupian"></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/05/22/marathon/" data-id="cjevf6fil00037vk15pa1xhy1" class="article-share-link">Partager</a>
+      <a data-url="http://yoursite.com/2018/03/17/personBlog/" data-id="cjevf6fip00057vk1uby1666w" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -112,19 +122,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2017/06/01/trie/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Récent</strong>
-      <div class="article-nav-title">
-        
-          Trie树应用详解
-        
-      </div>
-    </a>
   
-  
-    <a href="/2017/05/16/docker-storage/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2017/06/28/zookeeper/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Ancien</strong>
-      <div class="article-nav-title">docker storage</div>
+      <div class="article-nav-title">zookeeper源码分析</div>
     </a>
   
 </nav>
